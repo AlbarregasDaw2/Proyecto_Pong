@@ -18,6 +18,28 @@ let bola = {
     velocidadY : 5 
 };
 
+//players
+let max = 440;
+let min = 10;
+let playerWidth = 10;
+let playerHeight = 50;
+let movement = 10;
+
+let player1 = {
+    x : 10,
+    y : HEIGHT/2,
+    width: playerWidth,
+    height: playerHeight,
+    velocityY: 0
+}
+
+let player2 = {
+    x : WIDTH - playerWidth - 10,
+    y : HEIGHT/2,
+    width: playerWidth,
+    height: playerHeight,
+    velocityY: 0
+}
 
 myCanvas.height = HEIGHT;
 myCanvas.width = WIDTH;
@@ -29,7 +51,12 @@ const hitSound=new Audio('audio/audio/laser-gun-72558.mp3');
 
 window.onload = function(){
     requestAnimationFrame(update);
-   //Hola
+
+    //draw initial player1
+    context.fillStyle="black";
+    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+
+    document.addEventListener("keydown", movePlayer);
 }
 
 function update(){
@@ -43,31 +70,83 @@ function update(){
         context.fillRect(WIDTH/2 - 10, i, 5, 10);
     }
     
-        context.clearRect(0, 0, myCanvas.width, myCanvas.height);
-        context.beginPath();
-        context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
-        context.fillStyle = "black";
-        context.fill();
-        
-        bola.posicionBolaEjeX += bola.velocidadX;
-        bola.posicionBolaEjeY += bola.velocidadY;
+    context.beginPath();
+    context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
+    context.fillStyle = "black";
+    context.fill();
+
+    // player1
+    context.fillStyle = "black";
+    let nextPlayer1Y = player1.y + player1.velocityY;
+    if (!outOfBounds(nextPlayer1Y)) {
+        player1.y = nextPlayer1Y;
+    }
+    // player1.y += player1.velocityY;
+    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+
+    // player2
+    let nextPlayer2Y = player2.y + player2.velocityY;
+    if (!outOfBounds(nextPlayer2Y)) {
+        player2.y = nextPlayer2Y;
+    }
+    // player2.y += player2.velocityY;
+    context.fillRect(player2.x, player2.y, playerWidth, playerHeight);
     
-        if (bola.posicionBolaEjeX == WIDTH +20) {
-            bola.posicionBolaEjeX = 400;
-            bola.posicionBolaEjeY = 250;
-            bola.velocidadX = -5;
-            bola.velocidadY = -5;
-        }
-    
-        if (bola.posicionBolaEjeX == -20){
-            bola.posicionBolaEjeX = 400;
-            bola.posicionBolaEjeY = 250;
-            bola.velocidadX = 5;
-            bola.velocidadY = 5;
-        }
-    
-        if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
-            bola.velocidadY = -bola.velocidadY;
-        }
+    bola.posicionBolaEjeX += bola.velocidadX;
+    bola.posicionBolaEjeY += bola.velocidadY;
+
+    if (bola.posicionBolaEjeX == WIDTH +20) {
+        bola.posicionBolaEjeX = 400;
+        bola.posicionBolaEjeY = 250;
+        bola.velocidadX = -5;
+        bola.velocidadY = -5;
+    }
+
+    if (bola.posicionBolaEjeX == -20){
+        bola.posicionBolaEjeX = 400;
+        bola.posicionBolaEjeY = 250;
+        bola.velocidadX = 5;
+        bola.velocidadY = 5;
+    }
+
+    if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
+        bola.velocidadY = -bola.velocidadY;
+    }
     requestAnimationFrame(update);
+}
+
+function outOfBounds(yPosition) {
+    return (yPosition < 0 || yPosition + playerHeight > HEIGHT);
+}
+
+function movePlayer(e) {
+    //player1 movement up
+    if (e.code == "KeyW") {
+        if(player1.y > min){
+            player1.y = player1.y - movement;
+            console.log(player1.y);
+        }
+    }
+    //player1 movement down
+    if (e.code == "KeyS") {
+        if(player1.y < (max)){
+            player1.y = player1.y + movement;
+            console.log(player1.y);
+        }
+    }
+
+    //player2 mevement up
+    if (e.code == "ArrowUp") {
+        if(player2.y > min){
+            player2.y = player2.y - movement;
+            console.log(player2.y);
+        }
+    }
+    //player2 mevement down
+    if (e.code == "ArrowDown") {
+        if(player2.y < max){
+            player2.y = player2.y + movement;
+            console.log(player2.y);
+        }
+    }
 }
