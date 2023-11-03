@@ -101,6 +101,7 @@ function update(){
         bola.velocidadX = -2;
         bola.velocidadY = -2;
         marcador2 = marcador2 +1;
+        winSound.play();
     }
 
     if (bola.posicionBolaEjeX == -20){
@@ -109,12 +110,14 @@ function update(){
         bola.velocidadX = 2;
         bola.velocidadY = 2;
         marcador1 = marcador1 +1;
+        winSound.play();
     }
 
     if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + 50 && bola.posicionBolaEjeX == 20){
         //bolay vale 50 yplayer 100
         bola.velocidadX = 2;
         bola.velocidadY = 2;
+        hitSound.play();
     }
     if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + 50 && bola.posicionBolaEjeX == 780){
         bola.velocidadX = -2;
