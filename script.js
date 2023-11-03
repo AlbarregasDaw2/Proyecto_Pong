@@ -14,8 +14,8 @@ let bola = {
     minAncho:"0px",
     posicionBolaEjeX :400,
     posicionBolaEjeY : 250,
-    velocidadX : 5,
-    velocidadY : 5 
+    velocidadX : 2,
+    velocidadY : 2 
 };
 
 //players
@@ -98,15 +98,15 @@ function update(){
     if (bola.posicionBolaEjeX == WIDTH +20) {
         bola.posicionBolaEjeX = 400;
         bola.posicionBolaEjeY = 250;
-        bola.velocidadX = -5;
-        bola.velocidadY = -5;
+        bola.velocidadX = -2;
+        bola.velocidadY = -2;
     }
 
     if (bola.posicionBolaEjeX == -20){
         bola.posicionBolaEjeX = 400;
         bola.posicionBolaEjeY = 250;
-        bola.velocidadX = 5;
-        bola.velocidadY = 5;
+        bola.velocidadX = 2;
+        bola.velocidadY = 2;
     }
 
     if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
