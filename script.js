@@ -30,7 +30,7 @@ let player1 = {
     y : HEIGHT/2,
     width: playerWidth,
     height: playerHeight,
-    velocityY: 0
+    velocityY: 0,
 }
 
 let player2 = {
@@ -109,6 +109,16 @@ function update(){
         bola.velocidadX = 2;
         bola.velocidadY = 2;
         marcador1 = marcador1 +1;
+    }
+
+    if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + 50 && bola.posicionBolaEjeX == 20){
+        //bolay vale 50 yplayer 100
+        bola.velocidadX = 2;
+        bola.velocidadY = 2;
+    }
+    if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + 50 && bola.posicionBolaEjeX == 780){
+        bola.velocidadX = -2;
+        bola.velocidadY = -2;
     }
 
     if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
