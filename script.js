@@ -100,6 +100,7 @@ function update(){
         bola.posicionBolaEjeY = 250;
         bola.velocidadX = -2;
         bola.velocidadY = -2;
+        marcador2 = marcador2 +1;
     }
 
     if (bola.posicionBolaEjeX == -20){
@@ -107,6 +108,7 @@ function update(){
         bola.posicionBolaEjeY = 250;
         bola.velocidadX = 2;
         bola.velocidadY = 2;
+        marcador1 = marcador1 +1;
     }
 
     if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
