@@ -6,25 +6,30 @@ contenedor.innerHTML = `
     </div>
     <div id="botones">
         <button id="start">Start</button>
-        <button id="difficulty">Difficulty</button>
     </div>
 `;
 
 document.body.appendChild(contenedor);
 
-let start = document.getElementById("start");
-start.addEventListener("click", startGame);
 
-let difficultyBtn = document.getElementById("difficulty");
-difficultyBtn.addEventListener("click", difficulty);
+function events(){
+    let start = document.getElementById("start");
+    start.addEventListener("click", startGame);
+}
+
+events();
 
 const winSound=new Audio('./audio/crowd-cheer-ii-6263.mp3');
 const hitSound=new Audio('./audio/laser-gun-72558.mp3');
 
 let context;
 
+let lastUpdateTime = 0;
+const frameRate = 60; //fps
 let marcador1 = 0;
 let marcador2 = 0;
+
+const ballVelo = 6;
 const bolaElement = document.querySelector("#bola");
 const WIDTH = 800;
 const HEIGHT = 500;
@@ -39,15 +44,17 @@ let bola = {
     minAncho:"0px",
     posicionBolaEjeX :400,
     posicionBolaEjeY : 250,
-    velocidadX : 4,
-    velocidadY : 4 
+    velocidadX : ballVelo,
+    velocidadY : ballVelo 
 };
 
+
+let playerVelo = 4;
 //players
 let max = 440;
 let min = 10;
 let playerWidth = 10;
-let playerHeight = 50;
+let playerHeight = 70;
 let movement = 10;
 
 let player1 = {
@@ -55,7 +62,7 @@ let player1 = {
     y : HEIGHT/2,
     width: playerWidth,
     height: playerHeight,
-    velocityY: 0,
+    velocityY: 0
 }
 
 let player2 = {
@@ -80,78 +87,81 @@ function startGame(){
     myCanvas.width = WIDTH;
     myCanvas.height = HEIGHT;
     document.addEventListener("keydown", movePlayer);
+    document.addEventListener("keyup", stopPlayer);
     requestAnimationFrame(update);
 }
 
-function update(context){
+function update(time){
     context = myCanvas.getContext("2d");
-    context.clearRect(0, 0, WIDTH, HEIGHT);
+    let deltaTime = time - lastUpdateTime;
+    if (deltaTime > 1000 / frameRate) {
+        
+        context.clearRect(0, 0, WIDTH, HEIGHT);
 
-    context.font="45px Black Ops One ";
-    context.fillText(marcador1, WIDTH/5, 45);
-    context.fillText(marcador2, WIDTH*4/5 -45, 45);
+        context.font="45px Black Ops One ";
+        context.fillText(marcador1, WIDTH/5, 45);
+        context.fillText(marcador2, WIDTH*4/5 -45, 45);
 
-    for(let i=0; i < HEIGHT; i+=9){
-        context.fillRect(WIDTH/2 - 10, i, 5, 10);
-    }
-    
-    // player1
-    context.fillStyle = "black";
-    let nextPlayer1Y = player1.y + player1.velocityY;
-    if (!outOfBounds(nextPlayer1Y)) {
-        player1.y = nextPlayer1Y;
-    }
-    // player1.y += player1.velocityY;
-    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+        for(let i=0; i < HEIGHT; i+=9){
+            context.fillRect(WIDTH/2 - 10, i, 5, 10);
+        }
+        
+        // player1
+        context.fillStyle = "black";
+        let nextPlayer1Y = player1.y + player1.velocityY;
+        if (!outOfBounds(nextPlayer1Y)) {
+            player1.y = nextPlayer1Y;
+        }
+        // player1.y += player1.velocityY;
+        context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
 
-    // player2
-    let nextPlayer2Y = player2.y + player2.velocityY;
-    if (!outOfBounds(nextPlayer2Y)) {
-        player2.y = nextPlayer2Y;
-    }
-    // player2.y += player2.velocityY;
-    context.fillRect(player2.x, player2.y, playerWidth, playerHeight);
-    
-    context.beginPath();
-    context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
-    context.fillStyle = "black";
-    context.fill();
+        // player2
+        let nextPlayer2Y = player2.y + player2.velocityY;
+        if (!outOfBounds(nextPlayer2Y)) {
+            player2.y = nextPlayer2Y;
+        }
+        // player2.y += player2.velocityY;
+        context.fillRect(player2.x, player2.y, playerWidth, playerHeight);
+        
+        context.beginPath();
+        context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
+        context.fillStyle = "black";
+        context.fill();
 
-    bola.posicionBolaEjeX += bola.velocidadX;
-    bola.posicionBolaEjeY += bola.velocidadY;
+        bola.posicionBolaEjeX += bola.velocidadX;
+        bola.posicionBolaEjeY += bola.velocidadY;
 
-    if (bola.posicionBolaEjeX == WIDTH +20) {
-        bola.posicionBolaEjeX = 400;
-        bola.posicionBolaEjeY = 250;
-        bola.velocidadX *= -1;
-        bola.velocidadY *= -1;
-        marcador2 = marcador2 +1;
-        resetPositionPlayer(marcador1);
-        winSound.play();
-    }
+        if (bola.posicionBolaEjeX == WIDTH +20) {
+            bola.posicionBolaEjeX = 400;
+            bola.posicionBolaEjeY = 250;
+            bola.velocidadX = -ballVelo;
+            bola.velocidadY = -ballVelo;
+            marcador2 = marcador2 +1;
+            winSound.play();
+        }
 
-    if (bola.posicionBolaEjeX == -20){
-        bola.posicionBolaEjeX = 400;
-        bola.posicionBolaEjeY = 250;
-        bola.velocidadX *= -1;
-        bola.velocidadY *= -1;
-        marcador1 = marcador1 +1;
-        resetPositionPlayer(marcador1);
-       
-        winSound.play();
-    }
+        if (bola.posicionBolaEjeX == -20){
+            bola.posicionBolaEjeX = 400;
+            bola.posicionBolaEjeY = 250;
+            bola.velocidadX = ballVelo;
+            bola.velocidadY = ballVelo;
+            marcador1 = marcador1 +1;
+            winSound.play();
+        }
 
-    if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + 50 && bola.posicionBolaEjeX == 20){
-        //bolay vale 50 yplayer 100
-        bola.velocidadX *= -1;
-        hitSound.play();
-    }
-    if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + 50 && bola.posicionBolaEjeX == 780){
-        bola.velocidadX *= -1;
-    }
+        if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + playerHeight && bola.posicionBolaEjeX <= 20){
+            //bolay vale 50 yplayer 100
+            bola.velocidadX = ballVelo;
+            hitSound.play();
+        }
+        if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + playerHeight && bola.posicionBolaEjeX >= 780){
+            bola.velocidadX = -ballVelo;
+        }
 
-    if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
-        bola.velocidadY = -bola.velocidadY;
+        if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
+            bola.velocidadY = -bola.velocidadY;
+        }
+        lastUpdateTime = time;
     }
 
     if(marcador1 == 5 || marcador2 == 5){
@@ -169,35 +179,53 @@ function movePlayer(e) {
     //player1 movement up
     if (e.code == "KeyW") {
         if(player1.y > min){
-            player1.y = player1.y - movement;
+            player1.velocityY = -playerVelo;
         }
     }
     //player1 movement down
     if (e.code == "KeyS") {
         if(player1.y < (max)){
-            player1.y = player1.y + movement;
+            player1.velocityY = playerVelo;
         }
     }
 
     //player2 mevement up
     if (e.code == "ArrowUp") {
         if(player2.y > min){
-            player2.y = player2.y - movement;
+            player2.velocityY = -playerVelo;
         }
     }
     //player2 mevement down
     if (e.code == "ArrowDown") {
         if(player2.y < max){
-            player2.y = player2.y + movement;
+            player2.velocityY = playerVelo;
         }
     }
 
 }
 
-function resetPositionPlayer() {
+function stopPlayer(e){
+    if (e.code == "KeyW") {
+        if(player1.y > min){
+            player1.velocityY = 0;
+        }
+    }
+    if (e.code == "KeyS") {
+        if(player1.y < (max)){
+            player1.velocityY = 0;
+        }
+    }
 
-    player1.y = HEIGHT/2;
-    player2.y = HEIGHT/2;
+    if (e.code == "ArrowUp") {
+        if(player2.y > min){
+            player2.velocityY = 0;
+        }
+    }
+    if (e.code == "ArrowDown") {
+        if(player2.y < max){
+            player2.velocityY = 0;
+        }
+    }
 }
 
 function winORlosse(){
@@ -220,14 +248,8 @@ function winORlosse(){
     </div>
     <div id="botones">
         <button id="start">Start</button>
-        <button id="difficulty">Difficulty</button>
     </div>
     `;
     document.body.appendChild(contenedor);
-
-    let start = document.getElementById("start");
-    start.addEventListener("click", startGame);
-
-    let difficultyBtn = document.getElementById("difficulty");
-    difficultyBtn.addEventListener("click", difficulty);
+    events();
 }
