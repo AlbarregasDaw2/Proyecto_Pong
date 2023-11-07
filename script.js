@@ -126,6 +126,7 @@ function update(context){
         bola.velocidadX *= -1;
         bola.velocidadY *= -1;
         marcador2 = marcador2 +1;
+        resetPositionPlayer(marcador1);
         winSound.play();
     }
 
@@ -135,6 +136,8 @@ function update(context){
         bola.velocidadX *= -1;
         bola.velocidadY *= -1;
         marcador1 = marcador1 +1;
+        resetPositionPlayer(marcador1);
+       
         winSound.play();
     }
 
@@ -189,6 +192,12 @@ function movePlayer(e) {
         }
     }
 
+}
+
+function resetPositionPlayer() {
+
+    player1.y = HEIGHT/2;
+    player2.y = HEIGHT/2;
 }
 
 function winORlosse(){
