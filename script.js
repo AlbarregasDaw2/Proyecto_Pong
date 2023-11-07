@@ -1,3 +1,26 @@
+let contenedor = document.createElement("div");
+contenedor.classList.add("contenedor");
+contenedor.innerHTML = `
+    <div id="contador">
+        <h1 class="title">PONG</h1>   
+    </div>
+    <div id="botones">
+        <button id="start">Start</button>
+        <button id="difficulty">Difficulty</button>
+    </div>
+`;
+
+document.body.appendChild(contenedor);
+
+let start = document.getElementById("start");
+start.addEventListener("click", startGame);
+
+let difficultyBtn = document.getElementById("difficulty");
+difficultyBtn.addEventListener("click", difficulty);
+
+const winSound=new Audio('audio/audio/crowd-cheer-ii-6263.mp3');
+const hitSound=new Audio('audio/audio/laser-gun-72558.mp3');
+
 let marcador1 = 0;
 let marcador2 = 0;
 const bolaElement = document.querySelector("#bola");
@@ -41,25 +64,36 @@ let player2 = {
     velocityY: 0
 }
 
-myCanvas.height = HEIGHT;
-myCanvas.width = WIDTH;
-let context = myCanvas.getContext("2d");
-update();
-
-const winSound=new Audio('audio/audio/crowd-cheer-ii-6263.mp3');
-const hitSound=new Audio('audio/audio/laser-gun-72558.mp3');
-
-window.onload = function(){
-    requestAnimationFrame(update);
-
-    //draw initial player1
-    context.fillStyle="black";
-    context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
-
+function startGame(){
+    document.body.removeChild(contenedor);
+    contenedor.innerHTML=`
+    <div id="contador">
+        <h1>PONG</h1>   
+    </div>
+    <div id="resultado"></div>
+    <canvas id="myCanvas"></canvas>
+    `;
+    document.body.appendChild(contenedor);
+    let myCanvas = document.getElementById("myCanvas");
+    myCanvas.width = WIDTH;
+    myCanvas.height = HEIGHT;
+    let context = myCanvas.getContext("2d");
     document.addEventListener("keydown", movePlayer);
+    requestAnimationFrame(update);
+    update(context);
 }
 
-function update(){
+// window.onload = function(){
+//     requestAnimationFrame(update);
+
+//     //draw initial player1
+//     context.fillStyle="black";
+//     context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
+
+//     document.addEventListener("keydown", movePlayer);
+// }
+
+function update(context){
     context.clearRect(0, 0, WIDTH, HEIGHT);
     winORlosse();
 
