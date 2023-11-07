@@ -18,8 +18,10 @@ start.addEventListener("click", startGame);
 let difficultyBtn = document.getElementById("difficulty");
 difficultyBtn.addEventListener("click", difficulty);
 
-const winSound=new Audio('audio/audio/crowd-cheer-ii-6263.mp3');
-const hitSound=new Audio('audio/audio/laser-gun-72558.mp3');
+const winSound=new Audio('./audio/crowd-cheer-ii-6263.mp3');
+const hitSound=new Audio('./audio/laser-gun-72558.mp3');
+
+let context;
 
 let marcador1 = 0;
 let marcador2 = 0;
@@ -77,25 +79,13 @@ function startGame(){
     let myCanvas = document.getElementById("myCanvas");
     myCanvas.width = WIDTH;
     myCanvas.height = HEIGHT;
-    let context = myCanvas.getContext("2d");
     document.addEventListener("keydown", movePlayer);
     requestAnimationFrame(update);
-    update(context);
 }
 
-// window.onload = function(){
-//     requestAnimationFrame(update);
-
-//     //draw initial player1
-//     context.fillStyle="black";
-//     context.fillRect(player1.x, player1.y, playerWidth, playerHeight);
-
-//     document.addEventListener("keydown", movePlayer);
-// }
-
 function update(context){
+    context = myCanvas.getContext("2d");
     context.clearRect(0, 0, WIDTH, HEIGHT);
-    winORlosse();
 
     context.font="45px Black Ops One ";
     context.fillText(marcador1, WIDTH/5, 45);
@@ -105,11 +95,6 @@ function update(context){
         context.fillRect(WIDTH/2 - 10, i, 5, 10);
     }
     
-    context.beginPath();
-    context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
-    context.fillStyle = "black";
-    context.fill();
-
     // player1
     context.fillStyle = "black";
     let nextPlayer1Y = player1.y + player1.velocityY;
@@ -127,6 +112,11 @@ function update(context){
     // player2.y += player2.velocityY;
     context.fillRect(player2.x, player2.y, playerWidth, playerHeight);
     
+    context.beginPath();
+    context.arc(bola.posicionBolaEjeX, bola.posicionBolaEjeY, 10, 0, 2 * Math.PI);
+    context.fillStyle = "black";
+    context.fill();
+
     bola.posicionBolaEjeX += bola.velocidadX;
     bola.posicionBolaEjeY += bola.velocidadY;
 
@@ -162,7 +152,12 @@ function update(context){
     if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
         bola.velocidadY = -bola.velocidadY;
     }
-    requestAnimationFrame(update);
+
+    if(marcador1 == 5 || marcador2 == 5){
+        winORlosse();
+    }else{
+        requestAnimationFrame(update);
+    }
 }
 
 function outOfBounds(yPosition) {
@@ -174,14 +169,12 @@ function movePlayer(e) {
     if (e.code == "KeyW") {
         if(player1.y > min){
             player1.y = player1.y - movement;
-            console.log(player1.y);
         }
     }
     //player1 movement down
     if (e.code == "KeyS") {
         if(player1.y < (max)){
             player1.y = player1.y + movement;
-            console.log(player1.y);
         }
     }
 
@@ -189,29 +182,45 @@ function movePlayer(e) {
     if (e.code == "ArrowUp") {
         if(player2.y > min){
             player2.y = player2.y - movement;
-            console.log(player2.y);
         }
     }
     //player2 mevement down
     if (e.code == "ArrowDown") {
         if(player2.y < max){
             player2.y = player2.y + movement;
-            console.log(player2.y);
         }
     }
+
 }
 
 function winORlosse(){
-    if (marcador1 == 3){
-        context.font="45px Black Ops One ";
-        context.fillText("Victoria", WIDTH/5, 250);
-        context.fillText("Derrota", WIDTH/5, -35, 250);
+    let ganador;
+    if (marcador1 == 5){
+        ganador = 2;
+    }
+    if (marcador2 == 5){
+        ganador = 1;
     }
 
-    if (marcador2 == 3){
-        context.font="45px Black Ops One ";
-        context.fillText("Victoria", WIDTH*4/5 -150, 250);
-        context.fillText("Derrota", WIDTH/5, 250);
-    }
+    marcador1 = 0;
+    marcador2 = 0;
+    
+    document.body.removeChild(contenedor);
+    contenedor.innerHTML = `
+    <div id="contador">
+        <h1 class="title">PONG</h1>
+        <h1 class="mensaje" style="Black Ops One">Ha ganado el jugador ${ganador}.</h1>
+    </div>
+    <div id="botones">
+        <button id="start">Start</button>
+        <button id="difficulty">Difficulty</button>
+    </div>
+    `;
+    document.body.appendChild(contenedor);
 
+    let start = document.getElementById("start");
+    start.addEventListener("click", startGame);
+
+    let difficultyBtn = document.getElementById("difficulty");
+    difficultyBtn.addEventListener("click", difficulty);
 }
