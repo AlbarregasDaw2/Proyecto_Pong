@@ -61,6 +61,7 @@ window.onload = function(){
 
 function update(){
     context.clearRect(0, 0, WIDTH, HEIGHT);
+    winORlosse();
 
     context.font="45px Black Ops One ";
     context.fillText(marcador1, WIDTH/5, 45);
@@ -164,4 +165,19 @@ function movePlayer(e) {
             console.log(player2.y);
         }
     }
+}
+
+function winORlosse(){
+    if (marcador1 == 3){
+        context.font="45px Black Ops One ";
+        context.fillText("Victoria", WIDTH/5, 250);
+        context.fillText("Derrota", WIDTH/5, -35, 250);
+    }
+
+    if (marcador2 == 3){
+        context.font="45px Black Ops One ";
+        context.fillText("Victoria", WIDTH*4/5 -150, 250);
+        context.fillText("Derrota", WIDTH/5, 250);
+    }
+
 }
