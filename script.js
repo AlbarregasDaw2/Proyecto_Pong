@@ -39,8 +39,8 @@ let bola = {
     minAncho:"0px",
     posicionBolaEjeX :400,
     posicionBolaEjeY : 250,
-    velocidadX : 2,
-    velocidadY : 2 
+    velocidadX : 4,
+    velocidadY : 4 
 };
 
 //players
@@ -123,8 +123,8 @@ function update(context){
     if (bola.posicionBolaEjeX == WIDTH +20) {
         bola.posicionBolaEjeX = 400;
         bola.posicionBolaEjeY = 250;
-        bola.velocidadX = -2;
-        bola.velocidadY = -2;
+        bola.velocidadX *= -1;
+        bola.velocidadY *= -1;
         marcador2 = marcador2 +1;
         winSound.play();
     }
@@ -132,21 +132,19 @@ function update(context){
     if (bola.posicionBolaEjeX == -20){
         bola.posicionBolaEjeX = 400;
         bola.posicionBolaEjeY = 250;
-        bola.velocidadX = 2;
-        bola.velocidadY = 2;
+        bola.velocidadX *= -1;
+        bola.velocidadY *= -1;
         marcador1 = marcador1 +1;
         winSound.play();
     }
 
     if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + 50 && bola.posicionBolaEjeX == 20){
         //bolay vale 50 yplayer 100
-        bola.velocidadX = 2;
-        bola.velocidadY = 2;
+        bola.velocidadX *= -1;
         hitSound.play();
     }
     if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + 50 && bola.posicionBolaEjeX == 780){
-        bola.velocidadX = -2;
-        bola.velocidadY = -2;
+        bola.velocidadX *= -1;
     }
 
     if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
