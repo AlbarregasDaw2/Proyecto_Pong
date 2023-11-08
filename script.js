@@ -252,7 +252,7 @@ function winORlosse(){
         <h1 class="mensaje" style="Black Ops One">Ha ganado el jugador ${ganador}.</h1>
     </div>
     <div id="botones">
-        <button id="start">Start</button>
+        <button id="start">Restart</button>
     </div>
     `;
     document.body.appendChild(contenedor);
