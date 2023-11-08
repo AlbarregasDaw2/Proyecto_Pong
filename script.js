@@ -149,17 +149,19 @@ function update(time){
             winSound.play();
         }
 
-        if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + playerHeight && bola.posicionBolaEjeX <= 20){
+        if(bola.posicionBolaEjeY >= player1.y && bola.posicionBolaEjeY <= player1.y + playerHeight && bola.posicionBolaEjeX < player1.x + 15){
             //bolay vale 50 yplayer 100
             bola.velocidadX = ballVelo;
             hitSound.play();
         }
-        if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + playerHeight && bola.posicionBolaEjeX >= 780){
+        if(bola.posicionBolaEjeY >= player2.y && bola.posicionBolaEjeY <= player2.y + playerHeight && bola.posicionBolaEjeX > player2.x - 8){
             bola.velocidadX = -ballVelo;
+            hitSound.play();
         }
 
         if (bola.posicionBolaEjeY + 10 == HEIGHT || bola.posicionBolaEjeY - 10 == 0) {
             bola.velocidadY = -bola.velocidadY;
+            hitSound.play();
         }
         lastUpdateTime = time;
     }
@@ -239,6 +241,9 @@ function winORlosse(){
 
     marcador1 = 0;
     marcador2 = 0;
+
+    player1.y = HEIGHT/2;
+    player2.y = HEIGHT/2;
     
     document.body.removeChild(contenedor);
     contenedor.innerHTML = `
